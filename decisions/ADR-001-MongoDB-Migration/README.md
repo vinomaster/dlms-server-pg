@@ -7,7 +7,7 @@
 ## 2. Resources
 
 * **ChatGPT Proposed**: Final - Enterprise Grade ADR
-* **ChatGPT Executive Summary**: [Markdown](./ADR-001-PG-ExecSummary/ADR-001-PG-ExecSummary.md) | [Word](./ADR-001-PG-ExecSummary/ADR-001-PG-ExecSummary.docx) | [PDF](./ADR-001-PG-ExecSummary/ADR-001-PG-ExecSummary.pdf)
+* **ChatGPT Executive Summary**: [Markdown](./ExecSummary/ADR-001-PG-ExecSummary.md) | [Word](./ExecSummary/ADR-001-PG-ExecSummary.docx) | [PDF](./ExecSummary/ADR-001-PG-ExecSummary.pdf)
 
 ## 3. Context
 

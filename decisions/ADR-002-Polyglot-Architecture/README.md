@@ -1,9 +1,9 @@
-# ADR-001: Replace MongoDB with AWS Polyglot Architecture (RDS PostgreSQL + OpenSearch)
+# ADR-002: Replace MongoDB with AWS Polyglot Architecture (RDS PostgreSQL + OpenSearch)
 
-**Status:** Accepted  
-**Date:** 2025-01  
+**Status:** Proposed  
+**Date:** 2026-04-19  
 **Deciders:** DLMS Core Team  
-**Supersedes:** [MONGO.md](../decisions/MONGO.md)
+**Supersedes:** [MONGO Preference](https://github.com/discoverfinancial/dlms-server#setup-the-db)
 
 ---
 

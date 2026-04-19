@@ -3,7 +3,7 @@
 **DLMS Server – AWS Polyglot Edition**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Architecture: Polyglot](https://img.shields.io/badge/Architecture-AWS%20Polyglot-orange)](decisions/ADR-001-POLYGLOT.md)
+[![Architecture: Polyglot](https://img.shields.io/badge/Architecture-AWS%20Polyglot-orange)](decisions/ADR-002-Polyglot-Architecture/README.md)
 
 Document Lifecycle Management System server re-implemented on an AWS Polyglot stack that replaces MongoDB with **Amazon RDS PostgreSQL** (System of Record) + **Amazon OpenSearch Service** (Search Layer) + **Amazon S3** (Binary Storage & Backups).
 
@@ -35,7 +35,7 @@ Client / Browser
                                └──────────┘
 ```
 
-See [ADR-001](decisions/ADR-001-POLYGLOT.md) for the full architectural decision record.
+See [ADR-001](decisions/ADR-002-Polyglot-Architecture/README.md) for the full architectural decision record.
 
 ---
 
@@ -72,7 +72,10 @@ dlms-server-pg/
 │   └── terraform/
 │       └── main.tf         # Full AWS infrastructure (VPC·RDS·OS·S3·ECS·ALB)
 └── decisions/
-    └── ADR-001-POLYGLOT.md
+    └── ADR-001-MongoDB-Migration
+    └── ADR-002-Polyglot-Architecture
+    
+drwxr-xr-x@  4 dag  staff  128 Apr 19 12:56 ADR-002-Polyglot-Architecture
 ```
 
 ---
