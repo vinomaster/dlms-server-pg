@@ -35,7 +35,7 @@ Client / Browser
                                └──────────┘
 ```
 
-See [ADR-001](decisions/ADR-002-Polyglot-Architecture/README.md) for the full architectural decision record.
+See [ADR-002](decisions/ADR-002-Polyglot-Architecture/README.md) for the full architectural decision record.
 
 ---
 
