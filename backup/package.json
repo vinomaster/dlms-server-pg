@@ -1,0 +1,33 @@
+{
+  "name": "dlms-backup-pg",
+  "version": "1.0.0",
+  "description": "Backup and restore utilities for DLMS Polyglot – PostgreSQL + S3",
+  "main": "build/index.js",
+  "bin": {
+    "dlms-backup": "./build/cli.js",
+    "dlms-restore": "./build/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "backup": "ts-node src/cli.ts backup",
+    "restore": "ts-node src/cli.ts restore",
+    "reindex": "ts-node src/cli.ts reindex",
+    "clean": "rm -rf build"
+  },
+  "dependencies": {
+    "dlms-base-pg": "^1.0.0",
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/client-rds": "^3.600.0",
+    "pg": "^8.11.5",
+    "@opensearch-project/opensearch": "^2.7.0",
+    "commander": "^12.1.0",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "@types/pg": "^8.11.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: dlms
+          POSTGRES_PASSWORD: dlms
+          POSTGRES_DB: dlms_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      opensearch:
+        image: opensearchproject/opensearch:2.13.0
+        env:
+          discovery.type: single-node
+          plugins.security.disabled: "true"
+          OPENSEARCH_JAVA_OPTS: "-Xms256m -Xmx256m"
+        ports:
+          - 9200:9200
+        options: >-
+          --health-cmd "curl -sf http://localhost:9200/_cluster/health | grep -q green"
+          --health-interval 15s
+          --health-timeout 10s
+          --health-retries 10
+
+    env:
+      PG_HOST: localhost
+      PG_PORT: 5432
+      PG_DB: dlms_test
+      PG_USER: dlms
+      PG_PASS: dlms
+      PG_SSL: "false"
+      OPENSEARCH_ENDPOINT: http://localhost:9200
+      ATTACHMENTS_BUCKET: dlms-test-attachments
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      S3_ENDPOINT: http://localhost:4566
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint --if-present
+
+      - name: Test
+        run: npm test --if-present
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t dlms-server-pg:${{ github.sha }} ./server
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive infra/terraform/
+      - name: Terraform init & validate
+        run: |
+          cd infra/terraform
+          terraform init -backend=false
+          terraform validate

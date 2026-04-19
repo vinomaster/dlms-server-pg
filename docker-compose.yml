@@ -1,0 +1,83 @@
+version: "3.9"
+
+# Local development services for dlms-server-pg.
+# Provides PostgreSQL, OpenSearch, and LocalStack (S3 emulation).
+# Run:  docker compose up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dlms-postgres
+    environment:
+      POSTGRES_USER: dlms
+      POSTGRES_PASSWORD: dlms
+      POSTGRES_DB: dlms
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dlms"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  opensearch:
+    image: opensearchproject/opensearch:2.13.0
+    container_name: dlms-opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=DlmsLocal@123!
+      - plugins.security.disabled=true   # disable for local dev only
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - osdata:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.13.0
+    container_name: dlms-os-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    depends_on:
+      opensearch:
+        condition: service_healthy
+
+  localstack:
+    image: localstack/localstack:3.4
+    container_name: dlms-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,kms
+      - AWS_DEFAULT_REGION=us-east-1
+      - DEBUG=0
+    volumes:
+      - localstackdata:/var/lib/localstack
+      - ./scripts/localstack-init.sh:/etc/localstack/init/ready.d/init.sh:ro
+
+  # Optional: pgAdmin for DB inspection
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: dlms-pgadmin
+    profiles: ["tools"]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@dlms.local
+      PGADMIN_DEFAULT_PASSWORD: dlms
+    ports:
+      - "5050:80"
+
+volumes:
+  pgdata:
+  osdata:
+  localstackdata:

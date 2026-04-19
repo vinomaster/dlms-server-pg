@@ -1,0 +1,20 @@
+{
+  "name": "dlms-server-pg",
+  "version": "1.0.0",
+  "description": "DLMS Server – AWS Polyglot Edition (RDS PostgreSQL + OpenSearch)",
+  "private": true,
+  "workspaces": [
+    "base",
+    "server",
+    "backup"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "license": "MIT"
+}

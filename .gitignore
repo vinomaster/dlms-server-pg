@@ -1,0 +1,16 @@
+node_modules/
+build/
+dist/
+.env
+*.env.local
+*.log
+.DS_Store
+coverage/
+.nyc_output/
+*.tsbuildinfo
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+!example.tfvars
+.localstack/

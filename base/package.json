@@ -1,0 +1,15 @@
+{
+  "name": "dlms-base-pg",
+  "version": "1.0.0",
+  "description": "Shared types and interfaces for DLMS AWS Polyglot edition",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "license": "MIT"
+}
