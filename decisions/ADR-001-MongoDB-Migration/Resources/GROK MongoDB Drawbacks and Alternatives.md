@@ -6,7 +6,7 @@
 
 ## Answer
 
-> See [Originbal Grok Response](https://grok.com/share/c2hhcmQtMi1jb3B5_440dd7c7-a7ce-4055-b237-c53f50b7bc67?rid=69cb238e-c16d-43b7-852c-82338ed47a23).
+> See [Original Grok Response](https://grok.com/share/c2hhcmQtMi1jb3B5_440dd7c7-a7ce-4055-b237-c53f50b7bc67?rid=69cb238e-c16d-43b7-852c-82338ed47a23).
 
 **Enterprise drawbacks of using MongoDB** (whether self-managed or via Atlas) often center on operational complexity, performance trade-offs, and limitations that become pronounced at scale in regulated or complex enterprise environments. Key ones include:
 
