@@ -6,10 +6,11 @@ The following PROMPT was used with `Claude` Version 1.3109.0 to produce the init
 >Document Lifecycle Management System (DLMS) is an open source project that enables the creation of applications that depend on document and NoSql data workflow management and search. The project includes a [Server Repo](https://github.com/discoverfinancial/dlms-server) and a [Sample Application Tutorial](https://github.com/discoverfinancial/dlms-sample).
 
 >The project repos are heavily dependent upon MongoDB. While MongoDB provides schema flexibility and rapid development, enterprise adoption of DLMS is impacted by the following MongoDB concerns:
-    •    Compliance and regulatory ambiguity
-    •    Data consistency and governance challenges
-    •    Increasing operational and cost complexity
-    •    Limitations in enterprise-grade search and analytics
+>
+>    •    Compliance and regulatory ambiguity
+>    •    Data consistency and governance challenges
+>    •    Increasing operational and cost complexity
+>    •    Limitations in enterprise-grade search and analytics
 
 >To address these concerns, we seek to provide an alternative architecture that still provides the necessary backup, restore, and fill-text search capabilities. The solution is to provide an AWS Polyglot alternative that leverages RDS PostgreSQL as the System of Record and OpenSearch as the Search Layer. Please review the DLMS repositories, and create and populate complimentary repos that will provide working solutions using the AWS Polyglot architecture.
 
