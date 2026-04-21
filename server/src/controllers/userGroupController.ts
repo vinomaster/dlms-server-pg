@@ -1,55 +1,128 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { DocMgr } from "../docMgr";
-import { resolveUser } from "../middleware/auth";
+/**
+ * Copyright (c) 2024 Discover Financial Services
+ */
+import * as express from 'express';
+import {
+    Body,
+    Controller,
+    Get,
+    Path,
+    Put,
+    Patch,
+    Delete,
+    Route,
+    Request,
+    Response,
+    Example,
+} from 'tsoa';
+import { DocMgr } from '../docMgr';
+import {
+    UserGroupCreate,
+    UserGroupUpdate,
+    UserGroupInfo,
+    UserGroupList,
+} from 'dlms-base';
 
-export const userGroupRouter = Router();
+@Route('/api/user_groups')
+export class UserGroupController extends Controller {
+    /**
+     * Retrieve information for all of the user groups
+     * @param req
+     * @returns UserGroupList object
+     */
+    @Example<UserGroupList>({
+        count: 3,
+        items: [
+            { id: 'idGroup1', members: [], deletable: true },
+            { id: 'idGroup2', members: [], deletable: true },
+            { id: 'idGroup3', members: [], deletable: false },
+        ],
+    })
+    @Response('500', 'Internal Server Error.  Check database connection')
+    @Get()
+    public async getUserGroups(): Promise<UserGroupList> {
+        const mgr = await DocMgr.getInstance();
+        return await mgr.getUserGroups();
+    }
 
-// GET /api/user_groups
-userGroupRouter.get("/", resolveUser, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await DocMgr.getInstance().listUserGroups();
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-});
+    /**
+     * Retrieve information for given user group
+     * @param req
+     * @param id Document id
+     * @returns UserGroupInfo object
+     */
+    @Example<UserGroupInfo>({ id: 'idGroup1', members: [], deletable: true })
+    @Response('404', 'User group does not exist')
+    @Response('500', 'Internal Server Error.  Check database connection')
+    @Get('{id}')
+    public async getUserGroup(
+        @Request() req: express.Request,
+        @Path() id: string
+    ): Promise<UserGroupInfo> {
+        const mgr = await DocMgr.getInstance();
+        return await mgr.getUserGroup(mgr.getCtx(req), id);
+    }
 
-// POST /api/user_groups
-userGroupRouter.post("/", resolveUser, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const group = await DocMgr.getInstance().createUserGroup(req.userCtx!, req.body);
-    res.status(201).json(group);
-  } catch (err) {
-    next(err);
-  }
-});
+    /**
+     * Create user group.  User must be an admin to create a
+     * user group.
+     * @param req
+     * @param body UserGroupCreate object
+     * @returns New UserGroupInfo object retrieved from DB
+     */
+    @Example<UserGroupInfo>({ id: 'idGroup1', members: [], deletable: true })
+    @Response('400', 'User group with given id already exists')
+    @Response('401', 'User not an admin')
+    @Response('500', 'Internal Server Error.  Check database connection')
+    @Put()
+    public async createUserGroup(
+        @Request() req: express.Request,
+        @Body() body: UserGroupCreate
+    ): Promise<UserGroupInfo> {
+        const mgr = await DocMgr.getInstance();
+        return await mgr.createUserGroup(mgr.getCtx(req), body);
+    }
 
-// GET /api/user_groups/:id
-userGroupRouter.get("/:id", resolveUser, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const group = await DocMgr.getInstance().getUserGroup(req.params.id);
-    res.json(group);
-  } catch (err) {
-    next(err);
-  }
-});
+    /**
+     * Update the given user group.  User must be an admin
+     * to update a user group.
+     * @param req
+     * @param id User group id
+     * @param args UserGroupUpdate object
+     * @returns Updated UserGroupInfo object retrieved from DB
+     */
+    @Example<UserGroupInfo>({ id: 'idGroup1', members: [], deletable: true })
+    @Response('401', 'User not an admin')
+    @Response('404', 'User group with given id not found')
+    @Response('500', 'Internal Server Error.  Check database connection')
+    @Patch('{id}')
+    public async updateUserGroup(
+        @Request() req: express.Request,
+        @Path() id: string,
+        @Body() args: UserGroupUpdate
+    ): Promise<UserGroupInfo> {
+        const mgr = await DocMgr.getInstance();
+        return await mgr.updateUserGroup(mgr.getCtx(req), id, args);
+    }
 
-// PATCH /api/user_groups/:id
-userGroupRouter.patch("/:id", resolveUser, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const group = await DocMgr.getInstance().updateUserGroup(req.userCtx!, req.params.id, req.body);
-    res.json(group);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// DELETE /api/user_groups/:id
-userGroupRouter.delete("/:id", resolveUser, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const group = await DocMgr.getInstance().deleteUserGroup(req.userCtx!, req.params.id);
-    res.json(group);
-  } catch (err) {
-    next(err);
-  }
-});
+    /**
+     * Delete the given user group.  User must be an admin
+     * to delete a user group.
+     * @param req
+     * @param id User group id
+     * @returns UserGroupInfo object that was deleted
+     */
+    @Example<UserGroupInfo>({ id: 'idGroup1', members: [], deletable: true })
+    @Response('401', 'User not an admin')
+    @Response('403', 'User group is marked undeleteable')
+    @Response('404', 'User group with given id not found')
+    @Response('500', 'Internal Server Error.  Check database connection')
+    @Delete('{id}')
+    public async deleteUserGroup(
+        @Request() req: express.Request,
+        @Path() id: string
+    ): Promise<UserGroupInfo> {
+        const mgr = await DocMgr.getInstance();
+        return await mgr.deleteUserGroup(mgr.getCtx(req), id);
+    }
+}
